@@ -11,26 +11,43 @@ void main() async {
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  const MyApp({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    final stateManager = HomePageManager();
+
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: ThemeData.light(useMaterial3: true),
       home: Scaffold(
-        body: HomePage(),
+        appBar: AppBar(),
+        body: MyHomePage(stateManager: stateManager),
       ),
     );
   }
 }
 
-class HomePage extends StatelessWidget {
-  final stateManager = HomePageManager();
+class MyHomePage extends StatefulWidget {
+  final HomePageManager stateManager;
+  const MyHomePage({Key? key, required this.stateManager}) : super(key: key);
+
+  @override
+  _MyHomePageState createState() => _MyHomePageState();
+}
+
+class _MyHomePageState extends State<MyHomePage> {
+  TextEditingController searchController = TextEditingController();
+  List<Map<String, dynamic>> _searchResults = [];
+
+  @override
+  void initState() {
+    super.initState();
+    widget.stateManager.makeGetRequest();
+  }
 
   @override
   Widget build(BuildContext context) {
-    _makeGetRequest();
     return Column(children: [
       const SizedBox(height: 50),
       Center(
@@ -41,51 +58,88 @@ class HomePage extends StatelessWidget {
       ),
       const SizedBox(height: 20),
       ValueListenableBuilder<RequestState>(
-          valueListenable: stateManager.resultNotifier,
+          valueListenable: widget.stateManager.resultNotifier,
           builder: (context, requestState, child) {
             if (requestState is RequestLoadInProgress) {
               return const CircularProgressIndicator();
             } else if (requestState is RequestLoadSuccess) {
               List<dynamic> jsonData = jsonDecode(requestState.body);
-              List<Map<String, dynamic>> filteredData = jsonData.map((item) {
+              List<Map<String, dynamic>> _allResults = jsonData.map((item) {
                 return {
                   "id": item['id'],
                   "name": item['title'],
                 };
               }).toList();
-              return SizedBox(
-                  height: MediaQuery.of(context).size.height - 80,
-                  child: ListView.builder(
-                      itemCount: filteredData.length,
-                      itemBuilder: (BuildContext context, int index) {
-                        return Column(
-                          children: [
-                            FilledButton(
-                              onPressed: () async {
-                                HapticFeedback.mediumImpact();
 
-                                Navigator.push(
-                                    context,
-                                    CupertinoPageRoute(
-                                        builder: (context) => Favorite(
-                                              context,
-                                              filteredData,
-                                              index,
-                                            )));
-                              },
-                              child: Text(filteredData[index]['name']),
-                            ),
-                          ],
-                        );
-                      }));
+              if (_searchResults.isEmpty &&
+                  searchController.selection.baseOffset == -1)
+                _searchResults = _allResults;
+
+              void _performSearch(searchText) {
+                _searchResults = _allResults
+                    .where((element) => element['name']
+                        .toLowerCase()
+                        .contains(searchText.toLowerCase()))
+                    .toList();
+                print(_searchResults.length);
+                setState(() {
+                  _searchResults = _searchResults;
+                });
+              }
+
+              return SizedBox(
+                height: MediaQuery.of(context).size.height - 150,
+                child: _searchResults.isNotEmpty
+                    ? ListView.builder(
+                        itemCount: _searchResults.length,
+                        itemBuilder: (BuildContext context, int index) {
+                          return Column(
+                            children: [
+                              if (index == 0)
+                                TextField(
+                                  controller: searchController,
+                                  decoration: const InputDecoration(
+                                    hintText: 'Wyszukaj',
+                                  ),
+                                  onChanged: (value) async =>
+                                      _performSearch(value),
+                                ),
+                              ListTile(
+                                title: Text(_searchResults[index]['name']),
+                              ),
+                              FilledButton(
+                                onPressed: () async {
+                                  HapticFeedback.mediumImpact();
+                                  Navigator.push(
+                                      context,
+                                      CupertinoPageRoute(
+                                          builder: (context) => Favorite(
+                                                context,
+                                                _searchResults,
+                                                index,
+                                              )));
+                                },
+                                child: Column(children: [
+                                  SizedBox(
+                                      height: 100,
+                                      width: 300,
+                                      child: Text(
+                                        _searchResults[index]['name'],
+                                        style: const TextStyle(
+                                            wordSpacing: 2,
+                                            fontWeight: FontWeight.bold),
+                                      )),
+                                ]),
+                              ),
+                            ],
+                          );
+                        })
+                    : const Text('Brak wyników wyszukiwania'),
+              );
             } else {
               return Container();
             }
           })
     ]);
-  }
-
-  Future<void> _makeGetRequest() async {
-    await stateManager.makeGetRequest();
   }
 }

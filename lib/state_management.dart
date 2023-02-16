@@ -32,6 +32,8 @@ class HomePageManager {
       resultNotifier.value = RequestLoadSuccess(response.body);
     }
   }
+
+  void searchData(String searchText) {}
 }
 
 class RequestState {

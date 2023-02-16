@@ -24,6 +24,8 @@ class Favorite extends StatefulWidget {
 class _ChooseLocationState extends State<Favorite> {
   bool isInFavoritess = false;
 
+  // String get filteredData => '${widget.filteredData[widget.index]['name']}';
+
   @override
   void initState() {
     super.initState();
@@ -44,7 +46,22 @@ class _ChooseLocationState extends State<Favorite> {
                       child: SingleChildScrollView(
                         child: SizedBox(
                             height: 100,
+                            // MediaQuery.of(context).size.height,
                             child: Stack(children: [
+                              // Hero(
+                              //   tag: '5',
+                              //   child: ClipRRect(
+                              //     borderRadius: BorderRadius.circular(25),
+                              //     child: CachedNetworkImage(
+                              //         imageUrl: '',
+                              //         width: MediaQuery.of(context).size.width,
+                              //         height:
+                              //             MediaQuery.of(context).size.height,
+                              //         fit: BoxFit.cover,
+                              //         errorWidget: (context, url, error) =>
+                              //             const Icon(Icons.error)),
+                              //   ),
+                              // ),
                               Column(
                                   verticalDirection: VerticalDirection.up,
                                   children: [
