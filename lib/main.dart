@@ -56,7 +56,7 @@ class _MyHomePageState extends State<MyHomePage> {
           alignment: WrapAlignment.center,
         ),
       ),
-      const SizedBox(height: 20),
+      const SizedBox(height: 0),
       ValueListenableBuilder<RequestState>(
           valueListenable: widget.stateManager.resultNotifier,
           builder: (context, requestState, child) {
@@ -89,52 +89,56 @@ class _MyHomePageState extends State<MyHomePage> {
 
               return SizedBox(
                 height: MediaQuery.of(context).size.height - 150,
-                child: _searchResults.isNotEmpty
-                    ? ListView.builder(
-                        itemCount: _searchResults.length,
-                        itemBuilder: (BuildContext context, int index) {
-                          return Column(
-                            children: [
-                              if (index == 0)
-                                TextField(
-                                  controller: searchController,
-                                  decoration: const InputDecoration(
-                                    hintText: 'Wyszukaj',
-                                  ),
-                                  onChanged: (value) async =>
-                                      _performSearch(value),
-                                ),
-                              ListTile(
-                                title: Text(_searchResults[index]['name']),
-                              ),
-                              FilledButton(
-                                onPressed: () async {
-                                  HapticFeedback.mediumImpact();
-                                  Navigator.push(
-                                      context,
-                                      CupertinoPageRoute(
-                                          builder: (context) => Favorite(
-                                                context,
-                                                _searchResults,
-                                                index,
-                                              )));
-                                },
-                                child: Column(children: [
-                                  SizedBox(
-                                      height: 100,
-                                      width: 300,
-                                      child: Text(
-                                        _searchResults[index]['name'],
-                                        style: const TextStyle(
-                                            wordSpacing: 2,
-                                            fontWeight: FontWeight.bold),
-                                      )),
-                                ]),
-                              ),
-                            ],
-                          );
-                        })
-                    : const Text('Brak wyników wyszukiwania'),
+                child:
+
+                    // _searchResults.isNotEmpty
+                    //     ?
+                    Column(children: [
+                  TextField(
+                    controller: searchController,
+                    decoration: const InputDecoration(
+                      hintText: 'Search',
+                    ),
+                    onChanged: (value) async => _performSearch(value),
+                  ),
+
+                  Expanded(
+                      child: ListView.builder(
+                          itemCount: _searchResults.length,
+                          itemBuilder: (BuildContext context, int index) {
+                            return Column(
+                              children: [
+                                Padding(
+                                    padding: const EdgeInsets.all(10.0),
+                                    child: FilledButton(
+                                      onPressed: () async {
+                                        HapticFeedback.mediumImpact();
+                                        Navigator.push(
+                                            context,
+                                            CupertinoPageRoute(
+                                                builder: (context) => Favorite(
+                                                      context,
+                                                      _searchResults,
+                                                      index,
+                                                    )));
+                                      },
+                                      child: Column(children: [
+                                        SizedBox(
+                                            height: 100,
+                                            width: 300,
+                                            child: Text(
+                                              _searchResults[index]['name'],
+                                              style: const TextStyle(
+                                                  wordSpacing: 2,
+                                                  fontWeight: FontWeight.bold),
+                                            )),
+                                      ]),
+                                    )),
+                              ],
+                            );
+                          })),
+                  // : const Text('No search results'),
+                ]),
               );
             } else {
               return Container();
