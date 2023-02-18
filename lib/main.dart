@@ -65,10 +65,14 @@ class _MyHomePageState extends State<MyHomePage> {
             } else if (requestState is RequestLoadSuccess) {
               List<dynamic> jsonData = jsonDecode(requestState.body);
               List<Map<String, dynamic>> _allResults = jsonData.map((item) {
-                print(jsonData);
                 return {
-                  "id": item['id'],
-                  "name": item['title'],
+                  "imgSrc": item['imgSrc'],
+                  "text": item['text'],
+                  "description": item["description"],
+                  "dolar": item["dolar"],
+                  "isFree": item["isFree"],
+                  "tag": item["tag"],
+                  "url": item["url"],
                 };
               }).toList();
 
@@ -78,7 +82,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
               void _performSearch(searchText) {
                 _searchResults = _allResults
-                    .where((element) => element['name']
+                    .where((element) => element['text']
                         .toLowerCase()
                         .contains(searchText.toLowerCase()))
                     .toList();
@@ -128,7 +132,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                             height: 100,
                                             width: 300,
                                             child: Text(
-                                              _searchResults[index]['name'],
+                                              _searchResults[index]['text'],
                                               style: const TextStyle(
                                                   wordSpacing: 2,
                                                   fontWeight: FontWeight.bold),

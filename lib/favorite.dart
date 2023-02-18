@@ -3,6 +3,10 @@ import 'dart:ffi';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/services.dart';
+import 'package:url_launcher/url_launcher.dart';
+import 'package:url_launcher/link.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import './main.dart';
 
@@ -24,8 +28,6 @@ class Favorite extends StatefulWidget {
 class _ChooseLocationState extends State<Favorite> {
   bool isInFavoritess = false;
 
-  // String get filteredData => '${widget.filteredData[widget.index]['name']}';
-
   @override
   void initState() {
     super.initState();
@@ -35,55 +37,69 @@ class _ChooseLocationState extends State<Favorite> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: SizedBox(
-          height: MediaQuery.of(context).size.height,
+          height: MediaQuery.of(context).size.height - 150,
+          width: MediaQuery.of(context).size.width,
           child: Stack(
             children: <Widget>[
-              Scaffold(
-                  body: Container(
-                      margin: const EdgeInsets.only(top: 20),
-                      width: MediaQuery.of(context).size.width,
-                      height: MediaQuery.of(context).size.height,
-                      child: SingleChildScrollView(
-                        child: SizedBox(
-                            height: 100,
-                            // MediaQuery.of(context).size.height,
-                            child: Stack(children: [
-                              // Hero(
-                              //   tag: '5',
-                              //   child: ClipRRect(
-                              //     borderRadius: BorderRadius.circular(25),
-                              //     child: CachedNetworkImage(
-                              //         imageUrl: '',
-                              //         width: MediaQuery.of(context).size.width,
-                              //         height:
-                              //             MediaQuery.of(context).size.height,
-                              //         fit: BoxFit.cover,
-                              //         errorWidget: (context, url, error) =>
-                              //             const Icon(Icons.error)),
-                              //   ),
-                              // ),
-                              Column(
-                                  verticalDirection: VerticalDirection.up,
-                                  children: [
-                                    const Padding(
-                                      padding: EdgeInsets.only(
-                                        top: 50.0,
-                                        left: 50.0,
-                                      ),
-                                    ),
-                                    Row(
-                                      children: [
-                                        Text(
-                                          widget.filteredData[widget.index]
-                                              ['name'],
-                                        ),
-                                      ],
-                                    ),
-                                  ])
-                            ])),
-                      ))),
+              Padding(
+                  padding: const EdgeInsets.all(40.0),
+                  child: Scaffold(
+                    body: Container(
+                        margin: const EdgeInsets.only(top: 20),
+                        width: MediaQuery.of(context).size.width,
+                        height: MediaQuery.of(context).size.height,
+                        child: SingleChildScrollView(
+                          child: SizedBox(
+                              child: Stack(children: [
+                            Column(children: [
+                              const Padding(padding: EdgeInsets.all(40.0)),
+                              Text(
+                                widget.filteredData[widget.index]
+                                    ['description'],
+                                style: const TextStyle(
+                                    wordSpacing: 2,
+                                    fontWeight: FontWeight.bold),
+                              ),
+                              Padding(
+                                  padding: const EdgeInsets.all(10.0),
+                                  child: FilledButton(
+                                    onPressed: () async {
+                                      HapticFeedback.mediumImpact();
+                                      _launchUrl();
+                                    },
+                                    child: null,
+                                  )),
+                              Link(
+                                uri: Uri.parse(
+                                    '${widget.filteredData[widget.index]['url']}'),
+                                target: LinkTarget.blank,
+                                builder:
+                                    (BuildContext ctx, FollowLink? openLink) {
+                                  return TextButton.icon(
+                                    onPressed: openLink,
+                                    label:
+                                        const Text('Link Widget documentation'),
+                                    icon: const Icon(Icons.read_more),
+                                  );
+                                },
+                              ),
+                            ])
+                          ])),
+                        )),
+                  )),
             ],
           )),
     );
+  }
+
+  Future<void> _launchUrl() async {
+    Uri url = widget.filteredData[widget.index]['url'];
+    if (!await launchUrl(
+      url,
+      mode: LaunchMode.inAppWebView,
+    )) {
+      throw Exception(
+          'Could not launch ${widget.filteredData[widget.index]['url']}');
+    }
   }
 }

@@ -7,7 +7,8 @@ import 'package:html/dom.dart' as dom;
 
 class HomePageManager {
   final resultNotifier = ValueNotifier<RequestState>(RequestInitial());
-  static const urlPrefix = 'https://www.futurepedia.io';
+  static const urlPrefix =
+      'https://raw.githubusercontent.com/JakubJakubiak/List_Ai/main/db.json';
 
   Future<void> makeGetRequest() async {
     resultNotifier.value = RequestLoadInProgress();
@@ -16,17 +17,6 @@ class HomePageManager {
     Response jes = response;
     _handleResponse(response);
   }
-
-  // Future<void> makeGetRequest() async {
-  //   resultNotifier.value = RequestLoadInProgress();
-  //   final url = Uri.parse('$urlPrefix');
-  //   Response response = await get(url);
-  //   final document = parse(response.body);
-  //   final elements = document.querySelectorAll('.MuiBox-root.css-1l2cca9');
-  //   Response jes = response;
-  //   print(elements);
-  //   _handleResponse(elements as Response);
-  // }
 
   Future<void> makePostRequest() async {
     resultNotifier.value = RequestLoadInProgress();
