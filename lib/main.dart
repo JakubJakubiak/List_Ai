@@ -65,6 +65,7 @@ class _MyHomePageState extends State<MyHomePage> {
             } else if (requestState is RequestLoadSuccess) {
               List<dynamic> jsonData = jsonDecode(requestState.body);
               List<Map<String, dynamic>> _allResults = jsonData.map((item) {
+                print(jsonData);
                 return {
                   "id": item['id'],
                   "name": item['title'],
