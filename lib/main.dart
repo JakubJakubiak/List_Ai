@@ -21,7 +21,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       theme: ThemeData.light(useMaterial3: true),
       home: Scaffold(
-        // appBar: AppBar(),
+        resizeToAvoidBottomInset: false,
         body: MyHomePage(stateManager: stateManager),
       ),
     );
@@ -97,13 +97,23 @@ class _MyHomePageState extends State<MyHomePage> {
                     // _searchResults.isNotEmpty
                     //     ?
                     Column(children: [
-                  TextField(
-                    controller: searchController,
-                    decoration: const InputDecoration(
-                      hintText: 'Search',
-                    ),
-                    onChanged: (value) async => _performSearch(value),
-                  ),
+                  ClipRRect(
+                      borderRadius: BorderRadius.circular(25),
+                      child: Padding(
+                          padding: const EdgeInsets.all(30.0),
+                          child: TextFormField(
+                            controller: searchController,
+                            decoration: const InputDecoration(
+                                prefixIcon: Icon(Icons.search),
+                                fillColor: Colors.grey,
+                                focusColor: Colors.grey,
+                                border: InputBorder.none,
+                                hintText: "Search",
+                                hintStyle: TextStyle(
+                                  color: Colors.black,
+                                )),
+                            onChanged: (value) async => _performSearch(value),
+                          ))),
 
                   Expanded(
                       child: ListView.builder(
@@ -111,66 +121,71 @@ class _MyHomePageState extends State<MyHomePage> {
                           itemBuilder: (BuildContext context, int index) {
                             return Card(
                                 child: Column(children: <Widget>[
-                              GestureDetector(
-                                  onTap: () => {
-                                        HapticFeedback.mediumImpact(),
-                                        Navigator.push(
-                                            context,
-                                            CupertinoPageRoute(
-                                                builder: (context) => Favorite(
-                                                      context,
-                                                      _searchResults,
-                                                      index,
-                                                    ))),
-                                      },
-                                  child: SizedBox(
-                                      child: Stack(children: <Widget>[
-                                    Container(
-                                      height: 200,
-                                      color: Colors.white,
-                                    ),
-                                    Column(
-                                      children: [
-                                        Hero(
-                                          tag:
-                                              '${_searchResults[index]['url']}',
-                                          child: ClipRRect(
-                                              borderRadius:
-                                                  BorderRadius.circular(25),
-                                              child: CachedNetworkImage(
-                                                imageUrl:
-                                                    '${_searchResults[index]['imgSrc']}',
-                                                width: MediaQuery.of(context)
-                                                    .size
-                                                    .width,
-                                                height: 400,
-                                                fit: BoxFit.cover,
-                                                errorWidget:
-                                                    (context, url, error) =>
+                              Padding(
+                                  padding: const EdgeInsets.all(40.0),
+                                  child: GestureDetector(
+                                      onTap: () => {
+                                            HapticFeedback.mediumImpact(),
+                                            Navigator.push(
+                                                context,
+                                                CupertinoDialogRoute(
+                                                    builder: (context) =>
+                                                        Favorite(
+                                                          context,
+                                                          _searchResults,
+                                                          index,
+                                                        ),
+                                                    context: context)),
+                                          },
+                                      child: SizedBox(
+                                          child: Stack(children: <Widget>[
+                                        Container(
+                                          height: 200,
+                                        ),
+                                        Column(
+                                          children: [
+                                            Hero(
+                                              tag:
+                                                  '${_searchResults[index]['url']}',
+                                              child: ClipRRect(
+                                                  borderRadius:
+                                                      BorderRadius.circular(25),
+                                                  child: CachedNetworkImage(
+                                                    imageUrl:
+                                                        '${_searchResults[index]['imgSrc']}',
+                                                    width:
+                                                        MediaQuery.of(context)
+                                                            .size
+                                                            .width,
+                                                    height: 200,
+                                                    fit: BoxFit.cover,
+                                                    errorWidget: (context, url,
+                                                            error) =>
                                                         const Icon(Icons.error),
-                                              )),
-                                        ),
-                                        Text(
-                                          _searchResults[index]['text'],
-                                          style: const TextStyle(
-                                              wordSpacing: 2,
-                                              fontWeight: FontWeight.bold),
-                                        ),
-                                        Text(
-                                          _searchResults[index]['dolar'],
-                                          style: const TextStyle(
-                                              wordSpacing: 2,
-                                              fontWeight: FontWeight.bold),
-                                        ),
-                                        Text(
-                                          _searchResults[index]['description'],
-                                          style: const TextStyle(
-                                              wordSpacing: 2,
-                                              fontWeight: FontWeight.bold),
-                                        ),
-                                      ],
-                                    )
-                                  ])))
+                                                  )),
+                                            ),
+                                            Text(
+                                              _searchResults[index]['text'],
+                                              style: const TextStyle(
+                                                  wordSpacing: 2,
+                                                  fontWeight: FontWeight.bold),
+                                            ),
+                                            Text(
+                                              _searchResults[index]['dolar'],
+                                              style: const TextStyle(
+                                                  wordSpacing: 2,
+                                                  fontWeight: FontWeight.bold),
+                                            ),
+                                            Text(
+                                              _searchResults[index]
+                                                  ['description'],
+                                              style: const TextStyle(
+                                                  wordSpacing: 2,
+                                                  fontWeight: FontWeight.bold),
+                                            ),
+                                          ],
+                                        )
+                                      ]))))
                             ]));
                           })),
                   // : const Text('No search results'),
