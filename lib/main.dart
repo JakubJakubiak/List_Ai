@@ -21,7 +21,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       theme: ThemeData.light(useMaterial3: true),
       home: Scaffold(
-        appBar: AppBar(),
+        // appBar: AppBar(),
         body: MyHomePage(stateManager: stateManager),
       ),
     );
@@ -49,14 +49,12 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     return Column(children: [
-      const SizedBox(height: 50),
       Center(
         child: Wrap(
           spacing: 50,
           alignment: WrapAlignment.center,
         ),
       ),
-      const SizedBox(height: 0),
       ValueListenableBuilder<RequestState>(
           valueListenable: widget.stateManager.resultNotifier,
           builder: (context, requestState, child) {
@@ -93,7 +91,7 @@ class _MyHomePageState extends State<MyHomePage> {
               }
 
               return SizedBox(
-                height: MediaQuery.of(context).size.height - 150,
+                height: MediaQuery.of(context).size.height,
                 child:
 
                     // _searchResults.isNotEmpty
@@ -111,13 +109,11 @@ class _MyHomePageState extends State<MyHomePage> {
                       child: ListView.builder(
                           itemCount: _searchResults.length,
                           itemBuilder: (BuildContext context, int index) {
-                            return Column(
-                              children: [
-                                Padding(
-                                    padding: const EdgeInsets.all(10.0),
-                                    child: FilledButton(
-                                      onPressed: () async {
-                                        HapticFeedback.mediumImpact();
+                            return Card(
+                                child: Column(children: <Widget>[
+                              GestureDetector(
+                                  onTap: () => {
+                                        HapticFeedback.mediumImpact(),
                                         Navigator.push(
                                             context,
                                             CupertinoPageRoute(
@@ -125,22 +121,56 @@ class _MyHomePageState extends State<MyHomePage> {
                                                       context,
                                                       _searchResults,
                                                       index,
-                                                    )));
+                                                    ))),
                                       },
-                                      child: Column(children: [
-                                        SizedBox(
-                                            height: 100,
-                                            width: 300,
-                                            child: Text(
-                                              _searchResults[index]['text'],
-                                              style: const TextStyle(
-                                                  wordSpacing: 2,
-                                                  fontWeight: FontWeight.bold),
-                                            )),
-                                      ]),
-                                    )),
-                              ],
-                            );
+                                  child: SizedBox(
+                                      child: Stack(children: <Widget>[
+                                    Container(
+                                      height: 200,
+                                      color: Colors.white,
+                                    ),
+                                    Column(
+                                      children: [
+                                        Hero(
+                                          tag: {_searchResults[index]['url']},
+                                          child: ClipRRect(
+                                              borderRadius:
+                                                  BorderRadius.circular(25),
+                                              child: CachedNetworkImage(
+                                                imageUrl: _searchResults[index]
+                                                    ['url'],
+                                                width: MediaQuery.of(context)
+                                                    .size
+                                                    .width,
+                                                height: 400,
+                                                fit: BoxFit.cover,
+                                                errorWidget:
+                                                    (context, url, error) =>
+                                                        const Icon(Icons.error),
+                                              )),
+                                        ),
+                                        Text(
+                                          _searchResults[index]['text'],
+                                          style: const TextStyle(
+                                              wordSpacing: 2,
+                                              fontWeight: FontWeight.bold),
+                                        ),
+                                        Text(
+                                          _searchResults[index]['dolar'],
+                                          style: const TextStyle(
+                                              wordSpacing: 2,
+                                              fontWeight: FontWeight.bold),
+                                        ),
+                                        Text(
+                                          _searchResults[index]['description'],
+                                          style: const TextStyle(
+                                              wordSpacing: 2,
+                                              fontWeight: FontWeight.bold),
+                                        ),
+                                      ],
+                                    )
+                                  ])))
+                            ]));
                           })),
                   // : const Text('No search results'),
                 ]),

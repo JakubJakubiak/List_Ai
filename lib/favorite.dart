@@ -37,7 +37,7 @@ class _ChooseLocationState extends State<Favorite> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: SizedBox(
-          height: MediaQuery.of(context).size.height - 150,
+          height: MediaQuery.of(context).size.height,
           width: MediaQuery.of(context).size.width,
           child: Stack(
             children: <Widget>[
@@ -52,7 +52,24 @@ class _ChooseLocationState extends State<Favorite> {
                           child: SizedBox(
                               child: Stack(children: [
                             Column(children: [
-                              const Padding(padding: EdgeInsets.all(40.0)),
+                              Hero(
+                                tag:
+                                    '${widget.filteredData[widget.index]['url']}',
+                                child: ClipRRect(
+                                    borderRadius: BorderRadius.circular(25),
+                                    child: CachedNetworkImage(
+                                      imageUrl: widget
+                                          .filteredData[widget.index]['url'],
+                                      width: MediaQuery.of(context).size.width,
+                                      height: 200,
+                                      fit: BoxFit.cover,
+                                      errorWidget: (context, url, error) =>
+                                          const Icon(Icons.error),
+                                    )),
+                              ),
+                              const Padding(
+                                padding: EdgeInsets.only(top: 5),
+                              ),
                               Text(
                                 widget.filteredData[widget.index]
                                     ['description'],
@@ -60,26 +77,16 @@ class _ChooseLocationState extends State<Favorite> {
                                     wordSpacing: 2,
                                     fontWeight: FontWeight.bold),
                               ),
-                              Padding(
-                                  padding: const EdgeInsets.all(10.0),
-                                  child: FilledButton(
-                                    onPressed: () async {
-                                      HapticFeedback.mediumImpact();
-                                      _launchUrl();
-                                    },
-                                    child: null,
-                                  )),
+                              const Padding(padding: EdgeInsets.only(top: 20)),
                               Link(
                                 uri: Uri.parse(
                                     '${widget.filteredData[widget.index]['url']}'),
                                 target: LinkTarget.blank,
                                 builder:
                                     (BuildContext ctx, FollowLink? openLink) {
-                                  return TextButton.icon(
+                                  return FilledButton(
                                     onPressed: openLink,
-                                    label:
-                                        const Text('Link Widget documentation'),
-                                    icon: const Icon(Icons.read_more),
+                                    child: const Text('Link documentation'),
                                   );
                                 },
                               ),
@@ -90,16 +97,5 @@ class _ChooseLocationState extends State<Favorite> {
             ],
           )),
     );
-  }
-
-  Future<void> _launchUrl() async {
-    Uri url = widget.filteredData[widget.index]['url'];
-    if (!await launchUrl(
-      url,
-      mode: LaunchMode.inAppWebView,
-    )) {
-      throw Exception(
-          'Could not launch ${widget.filteredData[widget.index]['url']}');
-    }
   }
 }
