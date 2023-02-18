@@ -58,8 +58,8 @@ class _ChooseLocationState extends State<Favorite> {
                                 child: ClipRRect(
                                     borderRadius: BorderRadius.circular(25),
                                     child: CachedNetworkImage(
-                                      imageUrl: widget
-                                          .filteredData[widget.index]['url'],
+                                      imageUrl:
+                                          '${widget.filteredData[widget.index]['imgSrc']}',
                                       width: MediaQuery.of(context).size.width,
                                       height: 200,
                                       fit: BoxFit.cover,

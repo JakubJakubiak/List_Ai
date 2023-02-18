@@ -132,13 +132,14 @@ class _MyHomePageState extends State<MyHomePage> {
                                     Column(
                                       children: [
                                         Hero(
-                                          tag: {_searchResults[index]['url']},
+                                          tag:
+                                              '${_searchResults[index]['url']}',
                                           child: ClipRRect(
                                               borderRadius:
                                                   BorderRadius.circular(25),
                                               child: CachedNetworkImage(
-                                                imageUrl: _searchResults[index]
-                                                    ['url'],
+                                                imageUrl:
+                                                    '${_searchResults[index]['imgSrc']}',
                                                 width: MediaQuery.of(context)
                                                     .size
                                                     .width,
