@@ -164,21 +164,41 @@ class _MyHomePageState extends State<MyHomePage> {
                                                         const Icon(Icons.error),
                                                   )),
                                             ),
+                                            const Padding(
+                                                padding:
+                                                    EdgeInsets.only(top: 10)),
                                             Text(
                                               _searchResults[index]['text'],
                                               style: const TextStyle(
                                                   wordSpacing: 2,
                                                   fontWeight: FontWeight.bold),
                                             ),
-                                            Text(
-                                              _searchResults[index]['dolar'],
-                                              style: const TextStyle(
-                                                  wordSpacing: 2,
-                                                  fontWeight: FontWeight.bold),
-                                            ),
+                                            _searchResults[index]['dolar'] == ''
+                                                ? const Text('')
+                                                : FilledButton(
+                                                    onPressed: null,
+                                                    child: Text(
+                                                      _searchResults[index]
+                                                          ['dolar'],
+                                                      style: const TextStyle(
+                                                          wordSpacing: 2,
+                                                          fontWeight:
+                                                              FontWeight.bold),
+                                                    )),
+                                            FilledButton(
+                                                onPressed: null,
+                                                child: Text(
+                                                  _searchResults[index]
+                                                      ['isFree'],
+                                                  style: const TextStyle(
+                                                      wordSpacing: 2,
+                                                      fontWeight:
+                                                          FontWeight.bold),
+                                                )),
                                             Text(
                                               _searchResults[index]
                                                   ['description'],
+                                              maxLines: 4,
                                               style: const TextStyle(
                                                   wordSpacing: 2,
                                                   fontWeight: FontWeight.bold),
