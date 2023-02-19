@@ -88,12 +88,14 @@ class _ChooseLocationState extends State<Favorite> {
                                             wordSpacing: 2,
                                             fontWeight: FontWeight.bold),
                                       )),
-                              Text(
-                                widget.filteredData[widget.index]['isFree'],
-                                style: const TextStyle(
-                                    wordSpacing: 2,
-                                    fontWeight: FontWeight.bold),
-                              ),
+                              FilledButton(
+                                  onPressed: null,
+                                  child: Text(
+                                    widget.filteredData[widget.index]['isFree'],
+                                    style: const TextStyle(
+                                        wordSpacing: 2,
+                                        fontWeight: FontWeight.bold),
+                                  )),
                               const Padding(padding: EdgeInsets.only(top: 20)),
                               Link(
                                 uri: Uri.parse(
