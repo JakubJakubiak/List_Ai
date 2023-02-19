@@ -77,6 +77,17 @@ class _ChooseLocationState extends State<Favorite> {
                                     wordSpacing: 2,
                                     fontWeight: FontWeight.bold),
                               ),
+                              widget.filteredData[widget.index]['dolar'] == ''
+                                  ? const Text('')
+                                  : FilledButton(
+                                      onPressed: null,
+                                      child: Text(
+                                        widget.filteredData[widget.index]
+                                            ['dolar'],
+                                        style: const TextStyle(
+                                            wordSpacing: 2,
+                                            fontWeight: FontWeight.bold),
+                                      )),
                               Text(
                                 widget.filteredData[widget.index]['isFree'],
                                 style: const TextStyle(
