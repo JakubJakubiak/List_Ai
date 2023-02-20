@@ -105,7 +105,7 @@ class _ChooseLocationState extends State<Favorite> {
                                     (BuildContext ctx, FollowLink? openLink) {
                                   return FilledButton(
                                     onPressed: openLink,
-                                    child: const Text('Link documentation'),
+                                    child: const Text('Link'),
                                   );
                                 },
                               ),

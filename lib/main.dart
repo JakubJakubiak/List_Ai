@@ -59,7 +59,9 @@ class _MyHomePageState extends State<MyHomePage> {
           valueListenable: widget.stateManager.resultNotifier,
           builder: (context, requestState, child) {
             if (requestState is RequestLoadInProgress) {
-              return const CircularProgressIndicator();
+              return const Padding(
+                  padding: EdgeInsets.only(top: 100.0),
+                  child: Center(child: CircularProgressIndicator()));
             } else if (requestState is RequestLoadSuccess) {
               List<dynamic> jsonData = jsonDecode(requestState.body);
               List<Map<String, dynamic>> _allResults = jsonData.map((item) {
