@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:http/http.dart';
 import './state_management.dart';
 import 'favorite.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -100,18 +101,19 @@ class _MyHomePageState extends State<MyHomePage> {
                       child: Padding(
                           padding: const EdgeInsets.all(30.0),
                           child: TextFormField(
-                            controller: searchController,
-                            decoration: const InputDecoration(
-                                prefixIcon: Icon(Icons.search),
-                                fillColor: Colors.grey,
-                                focusColor: Colors.grey,
-                                border: InputBorder.none,
-                                hintText: "Search",
-                                hintStyle: TextStyle(
-                                  color: Colors.black,
-                                )),
-                            onChanged: (value) async => _performSearch(value),
-                          ))),
+                              controller: searchController,
+                              decoration: const InputDecoration(
+                                  prefixIcon: Icon(Icons.search),
+                                  fillColor: Colors.grey,
+                                  focusColor: Colors.grey,
+                                  border: InputBorder.none,
+                                  hintText: "Search",
+                                  hintStyle: TextStyle(
+                                    color: Colors.black,
+                                  )),
+                              onChanged: (value) async => {
+                                    _performSearch(value),
+                                  }))),
                   Expanded(
                       child: ListView.builder(
                           itemCount: _searchResults.length,
