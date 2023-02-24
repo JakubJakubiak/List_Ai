@@ -2,7 +2,7 @@
     package="com.example.list_ai">
     <uses-permission android:name="android.permission.INTERNET"/>
    <application
-        android:label="list_ai"
+        android:label="Awesome Ai List"
         android:name="${applicationName}"
         android:icon="@mipmap/launcher_icon">
         <activity
