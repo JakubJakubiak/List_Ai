@@ -98,7 +98,8 @@ class _ChooseLocationState extends State<Favorite> {
                                   )),
                               const Padding(padding: EdgeInsets.only(top: 20)),
                               widget.filteredData[widget.index]['url'] == ''
-                                  ? Link(
+                                  ? Container()
+                                  : Link(
                                       uri: Uri.parse(
                                           '${widget.filteredData[widget.index]['url']}'),
                                       target: LinkTarget.blank,
@@ -110,7 +111,6 @@ class _ChooseLocationState extends State<Favorite> {
                                         );
                                       },
                                     )
-                                  : Container(),
                             ])
                           ])),
                         )),
