@@ -97,18 +97,20 @@ class _ChooseLocationState extends State<Favorite> {
                                         fontWeight: FontWeight.bold),
                                   )),
                               const Padding(padding: EdgeInsets.only(top: 20)),
-                              Link(
-                                uri: Uri.parse(
-                                    '${widget.filteredData[widget.index]['url']}'),
-                                target: LinkTarget.blank,
-                                builder:
-                                    (BuildContext ctx, FollowLink? openLink) {
-                                  return FilledButton(
-                                    onPressed: openLink,
-                                    child: const Text('Link'),
-                                  );
-                                },
-                              ),
+                              widget.filteredData[widget.index]['url'] == ''
+                                  ? Link(
+                                      uri: Uri.parse(
+                                          '${widget.filteredData[widget.index]['url']}'),
+                                      target: LinkTarget.blank,
+                                      builder: (BuildContext ctx,
+                                          FollowLink? openLink) {
+                                        return FilledButton(
+                                          onPressed: openLink,
+                                          child: const Text('Link'),
+                                        );
+                                      },
+                                    )
+                                  : Container(),
                             ])
                           ])),
                         )),
