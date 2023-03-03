@@ -6,6 +6,7 @@ import 'package:http/http.dart';
 import './state_management.dart';
 import 'favorite.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter_vibrate/flutter_vibrate.dart';
 
 void main() async {
   runApp(const MyApp());
@@ -41,10 +42,28 @@ class _MyHomePageState extends State<MyHomePage> {
   TextEditingController searchController = TextEditingController();
   List<Map<String, dynamic>> _searchResults = [];
 
+  bool _canVibrate = true;
+  final Iterable<Duration> pauses = [
+    const Duration(milliseconds: 500),
+    const Duration(milliseconds: 1000),
+    const Duration(milliseconds: 500),
+  ];
+
   @override
   void initState() {
     super.initState();
     widget.stateManager.makeGetRequest();
+    _init();
+  }
+
+  Future<void> _init() async {
+    bool canVibrate = await Vibrate.canVibrate;
+    setState(() {
+      _canVibrate = canVibrate;
+      _canVibrate
+          ? debugPrint('This device can vibrate')
+          : debugPrint('This device cannot vibrate');
+    });
   }
 
   @override
@@ -120,7 +139,7 @@ class _MyHomePageState extends State<MyHomePage> {
                           itemBuilder: (BuildContext context, int index) {
                             return GestureDetector(
                                 onTap: () => {
-                                      HapticFeedback.mediumImpact(),
+                                      Vibrate.feedback(FeedbackType.success),
                                       Navigator.push(
                                           context,
                                           CupertinoDialogRoute(
